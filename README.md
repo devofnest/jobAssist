@@ -22,7 +22,7 @@ JobAssist Service는 여러 구인구직 플랫폼(예: 잡코리아, 사람인)
 │ ├── requirements.txt # 파이썬 패키지 목록
 │ └── README.md # 백엔드 관련 문서
 │
-├── frontend/ # React.js 프론트엔드 관련 코드
+├── frontend/ # React.js 프론트엔드 관련 코드b
 │ ├── public/ # 정적 파일 (index.html, favicon 등)
 │ ├── src/ # React 컴포넌트 및 소스코드
 │ │ ├── components/ # 재사용 가능한 컴포넌트들
