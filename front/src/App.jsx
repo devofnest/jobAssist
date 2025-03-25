@@ -51,16 +51,18 @@ function App() {
 	};
 
 	return (
-		<div className="min-h-screen flex flex-col items-center justify-center bg-white p-8">
-			<h1 className="text-3xl font-bold text-gray-800 mb-8">JOBASSIST</h1>
+		<div className="min-h-screen flex flex-col items-center justify-center bg-white p-8 font-pretendard">
+			<h1 className="text-3xl font-black text-gray-800 mb-8">
+				통합 검색
+			</h1>
 
 			<div className="bg-white/50 backdrop-blur-md shadow-lg border border-white/20 rounded-2xl p-8 w-full max-w-md">
 				<h2 className="text-2xl font-bold text-gray-800 mb-4">
-					Select Search SIte
+					Select Search site
 				</h2>
 
 				<div className="flex gap-4 mb-4">
-					<label className="flex items-center gap-2">
+					<label className="flex items-center gap-2 font-medium">
 						<input
 							type="checkbox"
 							checked={selectedSites.jobkorea}
@@ -68,7 +70,7 @@ function App() {
 						/>
 						잡코리아
 					</label>
-					<label className="flex items-center gap-2">
+					<label className="flex items-center gap-2 font-medium">
 						<input
 							type="checkbox"
 							checked={selectedSites.saramin}
@@ -78,7 +80,7 @@ function App() {
 					</label>
 				</div>
 
-				<div className="flex items-center gap-2">
+				<div className="flex items-center gap-2 mb-4">
 					<input
 						type="text"
 						placeholder="검색어 입력"
@@ -97,13 +99,13 @@ function App() {
 
 			<div className="bg-white/50 backdrop-blur-md shadow-lg border border-white/20 rounded-2xl p-8 w-full max-w-md mt-6">
 				<h2 className="text-lg font-semibold text-gray-700 mb-2">
-					Result
+					검색 결과
 				</h2>
 				<ul className="mt-2 space-y-2">
 					{results.map((item, index) => (
 						<li
 							key={index}
-							className="bg-gray-100/60 p-2 rounded-lg shadow-sm"
+							className="bg-gray-100/60 p-2 rounded-lg shadow-sm font-normal"
 						>
 							[{item.site}] {item.title} @ {item.company}
 						</li>
