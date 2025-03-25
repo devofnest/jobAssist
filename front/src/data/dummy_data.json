@@ -1,0 +1,26 @@
+{
+	"jobkorea": [
+		{
+			"title": "백엔드 개발자",
+			"company": "회사A",
+			"description": "Python, Django 사용 경험자 우대"
+		},
+		{
+			"title": "프론트엔드 개발자",
+			"company": "회사B",
+			"description": "React.js, Vue.js 경험자 우대"
+		}
+	],
+	"saramin": [
+		{
+			"title": "데이터 사이언티스트",
+			"company": "회사C",
+			"description": "머신러닝, 딥러닝, Python, R"
+		},
+		{
+			"title": "모바일 앱 개발자",
+			"company": "회사D",
+			"description": "Android, iOS, React Native"
+		}
+	]
+}
