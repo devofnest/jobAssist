@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Search } from "lucide-react";
 import dummyData from "./data/dummy_data.json";
 
 function App() {
@@ -50,11 +51,13 @@ function App() {
 	};
 
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-white">
+		<div className="min-h-screen flex flex-col items-center justify-center bg-white p-8">
+			<h1 className="text-3xl font-bold text-gray-800 mb-8">JOBASSIST</h1>
+
 			<div className="bg-white/50 backdrop-blur-md shadow-lg border border-white/20 rounded-2xl p-8 w-full max-w-md">
-				<h1 className="text-2xl font-bold text-gray-800 mb-4">
-					통합 검색 (Glassmorphism)
-				</h1>
+				<h2 className="text-2xl font-bold text-gray-800 mb-4">
+					Select Search SIte
+				</h2>
 
 				<div className="flex gap-4 mb-4">
 					<label className="flex items-center gap-2">
@@ -75,24 +78,26 @@ function App() {
 					</label>
 				</div>
 
-				<div className="flex items-center gap-2 mb-4">
+				<div className="flex items-center gap-2">
 					<input
 						type="text"
 						placeholder="검색어 입력"
 						value={keyword}
 						onChange={(e) => setKeyword(e.target.value)}
-						className="border border-gray-300 rounded-lg px-3 py-2 w-full bg-white/70 backdrop-blur-md"
+						className="border border-gray-300 rounded-lg px-3 py-2 w-full bg-white/70 backdrop-blur-md h-10"
 					/>
 					<button
 						onClick={handleSearch}
-						className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+						className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition flex items-center justify-center h-10 w-10"
 					>
-						검색
+						<Search size={20} />
 					</button>
 				</div>
+			</div>
 
-				<h2 className="text-lg font-semibold text-gray-700">
-					검색 결과
+			<div className="bg-white/50 backdrop-blur-md shadow-lg border border-white/20 rounded-2xl p-8 w-full max-w-md mt-6">
+				<h2 className="text-lg font-semibold text-gray-700 mb-2">
+					Result
 				</h2>
 				<ul className="mt-2 space-y-2">
 					{results.map((item, index) => (
