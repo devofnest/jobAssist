@@ -23,20 +23,23 @@ function App() {
 		if (selectedSites.jobkorea) siteList.push("jobkorea");
 		if (selectedSites.saramin) siteList.push("saramin");
 
-		const lowerKeyword = keyword.toLowerCase();
+		const lowerKeyword = keyword.toLowerCase().trim();
+		const keywordParts = lowerKeyword.split(" "); // 띄어쓰기 기준으로 단어 나누기
+
 		let tempResults = [];
 
 		siteList.forEach((site) => {
 			if (dummyData[site]) {
 				dummyData[site].forEach((job) => {
-					const titleMatch = job.title
-						.toLowerCase()
-						.includes(lowerKeyword);
-					const descMatch = job.description
-						.toLowerCase()
-						.includes(lowerKeyword);
+					const title = job.title.toLowerCase();
+					const desc = job.description.toLowerCase();
 
-					if (titleMatch || descMatch) {
+					// 각 단어(keywordParts 중 하나라도)가 title이나 description에 포함되는지 검사
+					const matches = keywordParts.some(
+						(word) => title.includes(word) || desc.includes(word)
+					);
+
+					if (matches) {
 						tempResults.push({
 							site: site,
 							title: job.title,
@@ -50,16 +53,44 @@ function App() {
 		setResults(tempResults);
 	};
 
+	// 추천 키워드 리스트 (컴포넌트 내 상단에 추가)
+	const popularKeywords = ["프론트", "백엔드", "React", "Python", "데이터"];
+
+	// 추천 키워드 클릭 시 호출되는 함수
+	const handlePopularClick = (word) => {
+		setKeyword(word); // input에 텍스트 입력
+		setTimeout(() => {
+			handleSearch(); // 바로 검색 실행
+		}, 0); // setState 후 실행되도록 약간 지연
+	};
+
 	return (
 		<div className="min-h-screen flex flex-col items-center justify-center bg-white p-8 font-pretendard">
 			<h1 className="text-3xl font-black text-gray-800 mb-8">
-				통합 검색
+				구직 통합 검색
 			</h1>
 
 			<div className="bg-white/50 backdrop-blur-md shadow-lg border border-white/20 rounded-2xl p-8 w-full max-w-md">
 				<h2 className="text-2xl font-bold text-gray-800 mb-4">
-					Select Search site
+					인크루트 도메인을 선택해주세요
 				</h2>
+				{/* 이 부분은 검색창 위에 추가해주세요 */}
+				<div className="mb-4">
+					<h3 className="text-sm text-gray-600 mb-2">
+						자주 검색되는 키워드
+					</h3>
+					<div className="flex flex-wrap gap-2">
+						{popularKeywords.map((word, idx) => (
+							<button
+								key={idx}
+								onClick={() => handlePopularClick(word)}
+								className="text-sm px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded-full transition"
+							>
+								#{word}
+							</button>
+						))}
+					</div>
+				</div>
 
 				<div className="flex gap-4 mb-4">
 					<label className="flex items-center gap-2 font-medium">
