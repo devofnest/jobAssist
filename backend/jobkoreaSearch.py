@@ -4,6 +4,11 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.service import Service
 from flask import flask
 
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/search")
 def jobsearch(input):
   service=Service("chromedriver-win64/chromedriver.exe")
   driver = webdriver.Chrome(service=service)
