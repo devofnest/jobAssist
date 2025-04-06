@@ -41,8 +41,10 @@ def jobsearch(input):
         for i in range(len(hiper)):
             link.append([hiper[i].get_attribute("href"),hiper[i].text])
     # print("성공했습니다")
+    json_list = [{"title": item[0], "url": item[1]} for item in link]
+    print(json.dumps(json_list, ensure_ascii=False, indent=2))
     driver.quit()
 
-    return link
+    return json_list
 
 print("****성공했습니다****")
