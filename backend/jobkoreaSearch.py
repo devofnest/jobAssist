@@ -12,6 +12,16 @@ chrome_options = Options()
 chrome_options.add_argument("--headless")  # 헤드리스 모드 활성화
 chrome_options.add_argument("--disable-gpu")  # GPU 가속 비활성화 (일부 환경에서 필요)
 
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=["http://localhost:3000"],  # React dev server
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
+
+# uvicorn main:app --reload --host 0.0.0.0 --port 8000
+
 @app.get("/search")
 def jobsearch(input):
 # WebDriver 실행
@@ -29,7 +39,7 @@ def jobsearch(input):
       hiper = jobtitle[i].find_elements(By.TAG_NAME, "a")
       for i in range(len(hiper)):
           link.append([hiper[i].get_attribute("href"),hiper[i].text])
+  # print(link)
   driver.quit()
-  return link
 
-jobsearch("백엔드")
+  return link
