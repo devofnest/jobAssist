@@ -26,7 +26,7 @@ app.add_middleware(
 @app.get("/search")
 def jobsearch(input):
 # WebDriver 실행
-    service=Service("chromedriver-win64/chromedriver.exe")
+    service=Service("chromedriver-mac-arm64/chromedriver.exe")
     driver = webdriver.Chrome(service=service, options=chrome_options)
     driver.get("https://www.jobkorea.co.kr")
     element = driver.find_element(By.CLASS_NAME,"smKey")
