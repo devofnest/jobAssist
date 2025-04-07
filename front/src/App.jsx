@@ -18,39 +18,59 @@ function App() {
 		}));
 	};
 
-	const handleSearch = () => {
-		const siteList = [];
-		if (selectedSites.jobkorea) siteList.push("jobkorea");
-		if (selectedSites.saramin) siteList.push("saramin");
+	// const handleSearch = () => {
+	// 	const siteList = [];
+	// 	if (selectedSites.jobkorea) siteList.push("jobkorea");
+	// 	if (selectedSites.saramin) siteList.push("saramin");
 
-		const lowerKeyword = keyword.toLowerCase().trim();
-		const keywordParts = lowerKeyword.split(" "); // 띄어쓰기 기준으로 단어 나누기
+	// 	const lowerKeyword = keyword.toLowerCase().trim();
+	// 	const keywordParts = lowerKeyword.split(" "); // 띄어쓰기 기준으로 단어 나누기
 
-		let tempResults = [];
+	// 	let tempResults = [];
 
-		siteList.forEach((site) => {
-			if (dummyData[site]) {
-				dummyData[site].forEach((job) => {
-					const title = job.title.toLowerCase();
-					const desc = job.description.toLowerCase();
+	// 	siteList.forEach((site) => {
+	// 		if (dummyData[site]) {
+	// 			dummyData[site].forEach((job) => {
+	// 				const title = job.title.toLowerCase();
+	// 				const desc = job.description.toLowerCase();
 
-					// 각 단어(keywordParts 중 하나라도)가 title이나 description에 포함되는지 검사
-					const matches = keywordParts.some(
-						(word) => title.includes(word) || desc.includes(word)
-					);
+	// 				// 각 단어(keywordParts 중 하나라도)가 title이나 description에 포함되는지 검사
+	// 				const matches = keywordParts.some(
+	// 					(word) => title.includes(word) || desc.includes(word)
+	// 				);
 
-					if (matches) {
-						tempResults.push({
-							site: site,
-							title: job.title,
-							company: job.company,
-						});
-					}
-				});
+	// 				if (matches) {
+	// 					tempResults.push({
+	// 						site: site,
+	// 						title: job.title,
+	// 						company: job.company,
+	// 					});
+	// 				}
+	// 			});
+	// 		}
+	// 	});
+
+	// 	setResults(tempResults);
+	// };
+
+	// 백엔드 API 호출을 위한 handleSearch 함수 (비동기)
+	const handleSearch = async () => {
+		if (!keyword.trim()) return;
+		try {
+			// 변경: 포트 번호를 8000으로 수정
+			const response = await fetch(
+				`http://localhost:8000/search?query=${encodeURIComponent(
+					keyword
+				)}`
+			);
+			if (!response.ok) {
+				throw new Error("네트워크 응답에 문제가 있습니다.");
 			}
-		});
-
-		setResults(tempResults);
+			const data = await response.json();
+			setResults(data.results || []);
+		} catch (error) {
+			console.error("검색 결과를 불러오는데 실패했습니다:", error);
+		}
 	};
 
 	// 추천 키워드 리스트 (컴포넌트 내 상단에 추가)
@@ -134,11 +154,19 @@ function App() {
 				</h2>
 				<ul className="mt-2 space-y-2">
 					{results.map((item, index) => (
+						// <li
+						// 	key={index}
+						// 	className="bg-gray-100/60 p-2 rounded-lg shadow-sm font-normal"
+						// >
+						// 	[{item.site}] {item.title} @ {item.company}
+						// </li>
 						<li
 							key={index}
 							className="bg-gray-100/60 p-2 rounded-lg shadow-sm font-normal"
 						>
-							[{item.site}] {item.title} @ {item.company}
+							<a href={item[0]} target="_blank" rel="noreferrer">
+								{item[1] ? item[1] : "제목 없음"}
+							</a>
 						</li>
 					))}
 				</ul>
