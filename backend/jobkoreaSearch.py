@@ -1,58 +1,64 @@
-# jobkoreaSearch.py
 from fastapi import FastAPI, Query
-from typing import Optional
-
+from fastapi.middleware.cors import CORSMiddleware
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from webdriver_manager.chrome import ChromeDriverManager
+import json
 
 app = FastAPI()
 
-# 크롬옵션
-chrome_options = Options()
-chrome_options.add_argument("--headless")  # 브라우저 창 없이 실행
-chrome_options.add_argument("--disable-gpu")
-# 필요하면 아래 주석 해제
-# chrome_options.add_argument("--no-sandbox")
-# chrome_options.add_argument("--disable-dev-shm-usage")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 개발 시 모든 도메인 허용
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-# Mac용 크롬드라이버 경로
-CHROMEDRIVER_PATH = "../chromedriver-mac-arm64/chromedriver" 
-# ↑ 폴더 위치에 맞춰서 수정하세요. 
-# 만약 backend 폴더 안에 chromedriver가 있다면 "./chromedriver-mac-arm64/chromedriver" 등으로
+chrome_options = Options()
+chrome_options.add_argument("--headless")       # 헤드리스 모드 활성화
+chrome_options.add_argument("--disable-gpu")      # GPU 가속 비활성화
+# 필요한 경우 추가 옵션: --no-sandbox, --disable-dev-shm-usage 등
 
 @app.get("/search")
-def jobsearch(input: Optional[str] = Query(None)):
-    # 크롬드라이버 실행
-    service = Service(CHROMEDRIVER_PATH)
-    driver = webdriver.Chrome(service=service, options=chrome_options)
+def jobsearch(query: str = Query(..., description="검색어 입력")):
+    try:
+        # webdriver_manager로 최신 드라이버 다운로드 (Mac Intel용)
+        # 만약 자동 선택 시 오류가 발생하면, 아래와 같이 버전을 직접 지정해 보세요.
+        service = Service(ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=service, options=chrome_options)
 
-    # JobKorea 메인 페이지 접속
-    driver.get("https://www.jobkorea.co.kr")
+        driver.get("https://www.jobkorea.co.kr")
 
-    # 검색창 찾아서 입력
-    element = driver.find_element(By.CLASS_NAME, "smKey")
-    input_box = element.find_element(By.ID, "stext")
+        # 검색창 찾기 및 검색어 입력
+        element = driver.find_element(By.CLASS_NAME, "smKey")
+        input_box = element.find_element(By.ID, "stext")
+        input_box.send_keys(query)
+        input_box.send_keys(Keys.ENTER)
 
-    if input:
-        input_box.send_keys(input)
-    else:
-        input_box.send_keys("개발자")  # 디폴트 검색어
-    input_box.send_keys(Keys.ENTER)
+        # 검색 결과 크롤링
+        links = []
+        joblist = driver.find_element(By.CLASS_NAME, "list")
+        jobsections = joblist.find_elements(By.CLASS_NAME, "list-section-information")
+        for section in jobsections:
+            anchors = section.find_elements(By.TAG_NAME, "a")
+            for a in anchors:
+                links.append([a.get_attribute("href"), a.text])
 
-    # 크롤링
-    link = []
-    joblist = driver.find_element(By.CLASS_NAME, "list")
-    jobtitle = joblist.find_elements(By.CLASS_NAME, "list-section-information")
+        driver.quit()
 
-    for jt in jobtitle:
-        hiper = jt.find_elements(By.TAG_NAME, "a")
-        for h in hiper:
-            href = h.get_attribute("href")
-            text = h.text
-            link.append([href, text])
+        # JSON 형식으로 변환
+        json_list = [{"link": item[0], "content": item[1]} for item in links]
+        print(json.dumps(json_list, ensure_ascii=False, indent=2))
+        return json_list
 
-    driver.quit()
-    return {"result": link}
+    except Exception as e:
+        # 오류 발생 시 상세 메시지를 반환합니다.
+        return {"error": str(e)}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)

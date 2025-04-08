@@ -6,12 +6,13 @@ from selenium.webdriver.chrome.options import Options
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from webdriver_manager.chrome import ChromeDriverManager
+import json  # 추가: json 모듈 임포트
 
 app = FastAPI()
 
 chrome_options = Options()
 chrome_options.add_argument("--headless")       # 헤드리스 모드 활성화
-chrome_options.add_argument("--disable-gpu")    # GPU 가속 비활성화 (일부 환경에서 필요)
+chrome_options.add_argument("--disable-gpu")      # GPU 가속 비활성화
 
 app.add_middleware(
     CORSMiddleware,
@@ -21,11 +22,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# uvicorn main:app --reload --host 0.0.0.0 --port 8000
-
 @app.get("/search")
 def jobsearch(query: str = Query(..., description="검색어 입력")):
-    # webdriver_manager를 사용하여 ChromeDriver 자동 다운로드 및 설정
+    # 최신 크롬드라이버 자동 다운로드 및 실행 (Mac에서는 Intel 버전 사용)
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=chrome_options)
     
@@ -40,25 +39,16 @@ def jobsearch(query: str = Query(..., description="검색어 입력")):
     # 결과 수집
     links = []
     joblist = driver.find_element(By.CLASS_NAME, "list")
-    jobtitle = joblist.find_elements(By.CLASS_NAME,"list-section-information")
-    for i in range(len(jobtitle)):
-        hiper = jobtitle[i].find_elements(By.TAG_NAME, "a")
-        for i in range(len(hiper)):
-            link.append([hiper[i].get_attribute("href"),hiper[i].text])
-    # print("성공했습니다")
-    json_list = [{"title": item[0], "url": item[1]} for item in link]
-    print(json.dumps(json_list, ensure_ascii=False, indent=2))
-    job_sections = joblist.find_elements(By.CLASS_NAME, "list-section-information")
-    for section in job_sections:
+    jobtitle = joblist.find_elements(By.CLASS_NAME, "list-section-information")
+    for section in jobtitle:
         anchors = section.find_elements(By.TAG_NAME, "a")
         for a in anchors:
             links.append([a.get_attribute("href"), a.text])
     
     driver.quit()
-    return {"results": links}
-
+    json_list = [{"link": item[0], "content": item[1]} for item in links]
+    print(json.dumps(json_list, ensure_ascii=False, indent=2))
+    
     return json_list
-
-print("****성공했습니다****")
 
 print("****성공했습니다****")
