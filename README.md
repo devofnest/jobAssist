@@ -14,7 +14,7 @@ JobAssist Service는 여러 구인구직 플랫폼(예: 잡코리아, 사람인)
 - `frontend/`: React 프론트엔드 UI
 
 더 자세한 내용은 여기서 확인 가능합니다.
-- [Frontend 관련 자세히 보기](./frontend/README.md)
+- [Frontend 관련 자세히 보기](./front/README.md)
 - [Backend 관련 자세히 보기](./backend/README.md)
    
 ### 설치 및 실행법
