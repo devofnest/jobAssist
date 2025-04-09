@@ -4,7 +4,8 @@ module.exports = {
 	theme: {
 		extend: {
 			fontFamily: {
-				pretendard: ["Pretendard", "sans-serif"],
+				gasoek: ["'Do Hyeon'", "sans-serif"], // 한글용
+				anton: ["Anton", "sans-serif"],         // 영어용
 			},
 		},
 	},
