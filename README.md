@@ -12,8 +12,7 @@ JobAssist Service는 여러 구인구직 플랫폼(예: 잡코리아, 사람인)
 ## 프로젝트 구조
 - `backend/`: 파이썬 백엔드 서버
 - `frontend/`: React 프론트엔드 UI
-- 
-### 더보기
+
 더 자세한 내용은 여기서 확인 가능합니다.
 - [Frontend 관련 자세히 보기](./frontend/README.md)
 - [Backend 관련 자세히 보기](./backend/README.md)
