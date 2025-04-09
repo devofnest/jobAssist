@@ -1,12 +1,81 @@
 # React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+JobAssist 서비스의 프론트엔드는 사용자가 원하는 구직 정보를 쉽고 빠르게 검색할 수 있도록 React와 Vite를 사용하여 개발된 사용자 친화적이고 반응형인 웹 인터페이스입니다. 사용자는 간단한 키워드 입력만으로 다양한 구직 플랫폼에서 제공하는 채용 공고를 한 번에 조회할 수 있습니다.
 
-Currently, two official plugins are available:
+### 디렉토리 구조
+```
+├── frontend/ # React.js 프론트엔드 관련 코드b
+│ ├── public/ # 정적 파일 (index.html, favicon 등)
+│ ├── src/ # React 컴포넌트 및 소스코드
+│ │ ├── main.js # 사용자 인터페임스 및 API 통신 로직
+│ │ └── App.js # 사용자 인터페임스 및 API 통신 로직
+│ ├── package.json # 프론트엔드 패키지 목록 및 스크립트
+│ └── README.md # 프론트엔드 관련 문서
+```
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 각 디렉토리별 설명
 
-## Expanding the ESLint configuration
+#### App.js: 사용자 인터페임스 및 API 통신 로직
+- 사용자가 입력한 검색어를 바탕으로 **백엔드 서버(main.py)**에 요청을 보내 채용 데이터를 받아옵니다.
+- 검색 결과를 화면에 즉시 렌더링합니다.
+- 사용성 향상을 위해 자주 검색되는 추천 키워드를 제공합니다.
+- 현재는 잡코리아만 활성화된 상태이며, 사람인은 비활성화 상태로 설정되어 있습니다.
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+#### 상세 기능
+
+1. 검색어 입력 및 검색 실행:
+- 사용자는 텍스트 입력창에 검색어를 입력하거나 추천 키워드를 클릭하여 즉시 검색을 실행할 수 있습니다.
+- 검색 버튼 클릭 시 비동기 API 호출이 실행됩니다.
+
+2. 비동기 API 호출 (Fetch API):
+- FastAPI 기반의 백엔드 서버(main.py)와 통신하며, 요청 성공 시 JSON 데이터를 받아와 화면에 출력합니다.
+- 로딩 상태(loading)를 UI로 표시하여 사용자 경험을 개선합니다.
+
+3. 추천 키워드 제공:
+- 사용 빈도가 높은 키워드(예: 프론트, 백엔드, React, Python, 데이터)를 버튼 형태로 제공합니다.
+- 사용자가 키워드를 클릭하면 자동으로 입력창에 키워드를 입력하고 즉시 검색합니다.
+
+4. 결과 표시:
+- 검색 결과는 잡코리아 사이트의 채용 공고로 연결되는 링크 형태로 표시됩니다.
+- 결과가 없거나 로딩 중일 때는 적절한 메시지가 출력됩니다.
+
+<br/>
+
+### 사용된 주요 기술
+
+| 구분          | 상세 내용        |
+|---------------|------------------|
+| UI 프레임워크 | React 19         |
+| 상태 관리     | React Hooks (useState) |
+| 스타일링      | TailwindCSS      |
+| 아이콘        | lucide-react     |
+| 빌드 도구     | Vite             |
+
+<br/>
+
+### 상태(state) 관리 변수
+
+| 변수명          | 용도 및 설명                               |
+|-----------------|--------------------------------------------|
+| `selectedSites` | 플랫폼 체크 상태 (잡코리아 고정 사용)       |
+| `keyword`       | 사용자가 입력한 검색어                      |
+| `results`       | API로부터 수신한 검색 결과(JSON 배열)       |
+| `loading`       | 검색 요청 중 여부 (로딩 상태)               |
+
+<br/>
+
+### 주요 함수 설명
+#### handleSearch()
+- 사용자가 입력한 검색어를 기반으로 백엔드에 비동기 요청을 보냅니다.
+- 요청 성공 시 데이터를 받아 결과 목록에 표시하며, 실패 시 에러 메시지를 콘솔에 출력합니다.
+- 로딩 상태를 관리하여 사용자가 기다리는 동안 "검색 중..." 메시지를 표시합니다.
+
+#### handlePopularClick(word)
+- 추천 키워드를 클릭할 경우 검색어를 자동 설정하고 즉시 검색을 수행합니다.
+
+<br/>
+
+### 향후 개선 계획
+- 컴포넌트 분리 (검색 폼, 결과 표시 영역 등)
+- 추가 구직 플랫폼 지원 (예: 사람인 등)
+- UI/UX 개선 (페이징, 무한 스크롤 등)
