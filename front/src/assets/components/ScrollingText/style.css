@@ -1,0 +1,35 @@
+/* scrolling-text */
+.jobassist-scroller-container {
+	position: absolute;
+	bottom: 3vh;
+	right: 0;
+	width: 100vw;
+	overflow: hidden;
+	pointer-events: none;
+	z-index: 0;
+}
+
+.jobassist-scroller {
+	display: flex;
+	width: fit-content;
+	white-space: nowrap;
+	animation: scrollLeft 20s linear infinite;
+	font-size: 50vh;
+	font-weight: 800;
+	line-height: 1;
+	color: transparent;
+	-webkit-text-stroke: 1px white;
+	text-stroke: 1px white;
+	opacity: 0.7;
+	user-select: none;
+	letter-spacing:2vw;
+}
+
+@keyframes scrollLeft {
+	from {
+		transform: translateX(0);
+	}
+	to {
+		transform: translateX(-50%);
+	}
+}
